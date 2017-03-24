@@ -1,2 +1,0 @@
-model_checkpoint_path: "modelRNN.ckpt"
-all_model_checkpoint_paths: "modelRNN.ckpt"
