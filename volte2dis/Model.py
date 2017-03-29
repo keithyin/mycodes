@@ -120,4 +120,3 @@ if __name__ == '__main__':
         for epoch in xrange(100000):
             print("epoch:%d" % epoch)
             run_epoch(sess,model,file_name,10,writer,saver)
-

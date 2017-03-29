@@ -3,7 +3,7 @@
 数据处理：
 100 个为一组， stride为20
 卷积神经网络：
-第一层：kernel:shape[4*1], stride[1,1]， pooling:shape[4*1],stride[4,1], avg pool
+第一层：kernel:shape[4*1], stride[4,1]， pooling:shape[4*1],stride[4,1], avg pool
 第二层:kernel:shape[4*1], stride[1,1]， pooling:shape[4*1],stride[4,1], avg pool
 将pooling后的输出展平会得到[batch_size, M]的矩阵
 全连接层：
@@ -50,7 +50,7 @@ class Model(object):
         conv1W = tf.get_variable("conv1W",shape=[20,1,1,4],dtype=tf.float32)
         conv1b = tf.get_variable("conv1b",shape=[4],dtype=tf.float32)
         tf.summary.histogram("conv1W",conv1W)
-        conv1 = tf.nn.conv2d(x,conv1W,[1,5,1,1],padding="SAME") # 第一层卷积
+        conv1 = tf.nn.conv2d(x,conv1W,[1,4,1,1],padding="SAME") # 第一层卷积
 
         conv1 = tf.nn.bias_add(conv1,conv1b)
         conv1 = tf.maximum(0.6*conv1,conv1)

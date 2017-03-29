@@ -3,8 +3,8 @@
 数据处理：
 100 个为一组， stride为20 100转成10*10
 卷积神经网络：
-第一层：kernel:shape[4*1], stride[1,1]， pooling:shape[4*1],stride[4,1], avg pool
-第二层:kernel:shape[4*1], stride[1,1]， pooling:shape[4*1],stride[4,1], avg pool
+第一层：kernel:shape[3*3], stride[2,2]， pooling:shape[2*2],stride[2,2], avg pool
+第二层:kernel:shape[3*3], stride[2,2]， pooling:shape[2*2],stride[2,2], avg pool
 将pooling后的输出展平会得到[batch_size, M]的矩阵
 全连接层：
 第一层： M个神经元
