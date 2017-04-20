@@ -151,8 +151,8 @@ def run_epoch(sess, model, data, batch_size,writer=None,saver=None):
     print(summ)
 if __name__ == '__main__':
     file_name = "vol1.csv"
-    config = Config()
-    model = Model(config)
+    config = Config() # 用RNN文件中的Config, Config的batch_size 设置为测试样本的个数
+    model = Model(config)# 将这个模型换成RNN model
     saver = tf.train.Saver()
     with tf.Session() as sess:
         tf.global_variables_initializer().run()
@@ -160,6 +160,6 @@ if __name__ == '__main__':
         #writer = tf.summary.FileWriter("checkpoint_cnn_v2", sess.graph)
         print("processing data")
         data = DataProcess.get_data_with_normalization_1(file_name, 100, 20)
-        print("number of data:%d"%len(data))
+        print("number of data:%d"%len(data)) # batch_size就设成len(data)
         np.random.shuffle(data)
         run_epoch(sess, model, data, config.batch_size)
