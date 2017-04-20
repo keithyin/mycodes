@@ -54,6 +54,7 @@ class Model(object):
         softmax_output = tf.nn.softmax(fc2) #接softmax输出
 
         self.predict = tf.arg_max(softmax_output, dimension=1)
+        self.true_in = tf.arg_max(self.true_label, dimension=1)
         self.accurate = tf.reduce_mean(
             tf.cast(tf.equal(self.predict, tf.arg_max(self.true_label, dimension=1)), tf.float32))
         self.loss = tf.reduce_mean(-tf.reduce_sum((self.true_label * tf.log(softmax_output) +
@@ -104,13 +105,17 @@ def run_epoch(sess, model, data, batch_size,writer,saver):
     #test
     test_losses=[]
     test_accuracy=[]
+    #*****************************************
+    summ = np.zeros([4,4],dtype=np.int16)
     for j in range(test_set_size//batch_size):
         feed_dic = {}
         feed_dic[model.data_in.name] = test_x[j*batch_size:(j+1)*batch_size]
         feed_dic[model.true_label.name] = test_label[j*batch_size:(j+1)*batch_size]
-        accu, los= sess.run([model.accurate, model.loss], feed_dic)
-        test_accuracy.append(accu)
-        test_losses.append(los)
+        actual, predict= sess.run([model.true_in, model.predict], feed_dic)
+        for x, y in zip(actual, predict):
+            summ[x, y] += 1
+    print(summ)
+    #*****************************************
     if flag:
         print("test:"),
         print("los:%.2f, accu:%.2f" % (np.mean(test_losses), np.mean(test_accuracy)))
@@ -134,4 +139,3 @@ if __name__ == '__main__':
             np.random.shuffle(data)
             print("epoch:%d" % epoch)
             run_epoch(sess,model,data,config.batch_size,writer,saver)
-
