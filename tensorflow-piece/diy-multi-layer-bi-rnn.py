@@ -1,3 +1,6 @@
+"""
+tensorflow 1.1.0版本
+"""
 def stacked_bidirectional_rnn(RNN, num_units, num_layers, inputs, seq_lengths, batch_size):
     """
     multi layer bidirectional rnn
