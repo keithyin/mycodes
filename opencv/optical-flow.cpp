@@ -95,8 +95,8 @@ int main(int argc, const char** argv)
     img.copyTo(prevgray);
 
     }
+    //如果想实时显示视频的话,必须要加上这句,要不然,显示不出来.
     int key1 = waitKey(20);
-
   }
  }
 }
