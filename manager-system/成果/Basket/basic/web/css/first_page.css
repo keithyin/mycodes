@@ -1,0 +1,21 @@
+table{
+	border-collapse：collapse;
+	width:100%;
+}
+
+td{
+	background-color:#0CA3D2;	
+	text-align:center;
+	height:50px;
+}
+table,td{
+	border:1px solid white;
+}
+image{
+	width:100px;
+	height:100px;
+}
+.head_portait{
+	width:100%;
+	heigth:100px;
+}

@@ -1,0 +1,20 @@
+@CHARSET "UTF-8";
+
+.xiaoer{
+	font-family:楷体;
+	font-size:5;
+}
+.si{
+	font-family:楷体;
+	font-size:4
+}
+.xiaosi{
+	font-family:楷体;
+	font-size:3;
+}
+table tr td{
+	font-family:楷体;
+	font-size:3;
+	font-color:blue;
+	border:1px solid white;
+}
