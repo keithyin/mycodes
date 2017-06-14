@@ -52,8 +52,8 @@ def convert_to(img_list, target_dir, name="train"):
     ]
     bar = progressbar.ProgressBar(widgets=widgets, max_value=total_num).start()
     ####
-    
-    
+
+
     filename = os.path.join(target_dir, name+'.tfrecords')
     print('Writing', filename)
     writer = tf.python_io.TFRecordWriter(filename)
@@ -137,7 +137,7 @@ def read_data(file_names, batch_size):
                                                             num_threads=4, capacity=capacity)
         return example_batch, label_batch
 
-        
+
 def main(args):
     train_imgs = parse_txt_file(args.train_txt, args.data_dir)
     test_imgs = parse_txt_file(args.test_txt, args.data_dir)
@@ -146,7 +146,7 @@ def main(args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Utils to build TF record")
+    parser = argparse.ArgumentParser(description="Utils to build TF records")
     parser.add_argument("--data_dir", default="", help="the data root dir")
     parser.add_argument("--train_txt",default="", help="train_txt file")
     parser.add_argument("--test_txt", default="", help="test txt file")
