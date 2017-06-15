@@ -10,10 +10,13 @@ This is used for generate TFRecord, if you want to using this Util, You need to 
 3. You need to make sure "data_dir/img1_relative_path" is the absolute path of img1
 
 4. The Funciton read_data is a example to read the tfrecord data
+
+attention: 
 """
 import tensorflow as tf
 import os
-from matplotlib.pyplot import imread
+from skimage.io import imread
+import skimage
 import argparse
 import progressbar
 
@@ -121,7 +124,7 @@ def read_data(file_names, batch_size):
                                             'depth': tf.FixedLenFeature([], tf.int64),
                                             'label': tf.FixedLenFeature([], tf.int64),
                                             'image_raw': tf.FixedLenFeature([],tf.string)})
-        img = tf.decode_raw(features['image_raw'], tf.float32)
+        img = tf.decode_raw(features['image_raw'], tf.uint8)
         height = tf.cast(features['height'], tf.int32)
         width = tf.cast(features['width'], tf.int32)
         depth = tf.cast(features['depth'], tf.int32)
