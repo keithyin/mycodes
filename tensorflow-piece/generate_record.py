@@ -19,6 +19,7 @@ from skimage.io import imread
 import skimage
 import argparse
 import progressbar
+import threading 
 
 
 class Img(object):
@@ -144,8 +145,14 @@ def read_data(file_names, batch_size):
 def main(args):
     train_imgs = parse_txt_file(args.train_txt, args.data_dir)
     test_imgs = parse_txt_file(args.test_txt, args.data_dir)
-    convert_to(train_imgs,target_dir=args.target_dir, name="train")
-    convert_to(test_imgs, target_dir=args.target_dir, name="test")
+    t1 = threading.Thread(target=convert_to, args=(train_imgs, args.target_dir, "train"))
+    t2 = threading.Thread(target=convert_to, args=(test_imgs, args.target_dir, "test"))
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
+    # convert_to(train_imgs,target_dir=args.target_dir, name="train")
+    # convert_to(test_imgs, target_dir=args.target_dir, name="test")
 
 
 if __name__ == '__main__':
