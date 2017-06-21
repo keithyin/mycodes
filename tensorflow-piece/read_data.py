@@ -25,6 +25,9 @@ def read_data(file_names, batch_size):
         label = tf.cast(features['label'], tf.int32)
         img_shape = tf.stack([height, width, depth])
         img_reshaped = tf.cast(tf.reshape(img,[224,224,3]), tf.float32)
+        # if the shape parameter in tf.reshape is tensor, there will be an error in 
+        # tf.train.shuffle_batch. don't know why, probably must have the same shape
+        # within one batch
 
         min_after_dequeue = 500
         capacity = min_after_dequeue+3*batch_size
