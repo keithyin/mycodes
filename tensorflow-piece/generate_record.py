@@ -125,12 +125,16 @@ def read_data(file_names, batch_size):
                                             'depth': tf.FixedLenFeature([], tf.int64),
                                             'label': tf.FixedLenFeature([], tf.int64),
                                             'image_raw': tf.FixedLenFeature([],tf.string)})
+        # NOte that choose the dtype carefully, must coincident with the dtype of data you encode
         img = tf.decode_raw(features['image_raw'], tf.uint8)
         height = tf.cast(features['height'], tf.int32)
         width = tf.cast(features['width'], tf.int32)
         depth = tf.cast(features['depth'], tf.int32)
         label = tf.cast(features['label'], tf.int32)
         img_shape = tf.stack([height, width, depth])
+
+        # if you want to use shuffle_batch, you must specicy the img shape
+        # img_reshaped = tf.cast(tf.shape(img, img_shape), tf.float32) doesn't work for shuffle batch
         img_reshaped = tf.cast(tf.reshape(img,[224,224,3]), tf.float32)
 
         min_after_dequeue = 500
