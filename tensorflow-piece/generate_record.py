@@ -125,7 +125,7 @@ def read_data(file_names, batch_size):
                                             'depth': tf.FixedLenFeature([], tf.int64),
                                             'label': tf.FixedLenFeature([], tf.int64),
                                             'image_raw': tf.FixedLenFeature([],tf.string)})
-        # NOte that choose the dtype carefully, must coincident with the dtype of data you encode
+        # Note that choose the out_type carefully, must coincident with the dtype of data you encode
         img = tf.decode_raw(features['image_raw'], tf.uint8)
         height = tf.cast(features['height'], tf.int32)
         width = tf.cast(features['width'], tf.int32)
