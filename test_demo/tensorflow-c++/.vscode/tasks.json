@@ -1,0 +1,9 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "0.1.0",
+    "command": "gcc",
+    "isShellCommand": true,
+    "args": ["${file}", "-o", "${fileBasenameNoExtension}", "-g3", "-Og", "-Wall", "-std=c++11", "-fexec-charset=GBK", "-finput-charset=UTF-8","-I=/home/keith/WorkSpace/dl-frameworks/tensorflow_c/include"],
+    "showOutput": "always"
+}
