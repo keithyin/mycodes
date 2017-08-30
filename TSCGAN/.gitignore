@@ -1,0 +1,18 @@
+*.pyc
+*.rob-com
+*.rob-laptop
+
+# pycharm related
+.idea/
+__pycache__
+tools/__pycache__
+data/__pycache__
+models/__pycache__
+other/__pycache__
+config/__pycache__
+Elec/
+data/*.tfrecords
+
+# other
+ckpt/
+ckpt_pure_gan/
