@@ -17,8 +17,8 @@ def stacked_bidirectional_rnn(RNN, num_units, num_layers, inputs, seq_lengths, b
     """
     _inputs = inputs
     if len(_inputs.get_shape().as_list()) != 3:
-    	raise ValueError("the inputs must be 3-dimentional")
-    
+    	raise ValueError("the inputs must be 3-dimentional Tensor")
+
     for _ in range(num_layers):
         #为什么在这加个variable_scope,被逼的,tf在rnn_cell的__call__中非要搞一个命名空间检查
         #恶心的很.如果不在这加的话,会报错的.
