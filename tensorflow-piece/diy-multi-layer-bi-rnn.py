@@ -4,12 +4,12 @@ tensorflow 1.1.0版本
 def stacked_bidirectional_rnn(RNN, num_units, num_layers, inputs, seq_lengths, batch_size):
     """
     multi layer bidirectional rnn
-    :param RNN: RNN class
-    :param num_units: hidden unit of RNN cell
-    :param num_layers: the number of layers
-    :param inputs: the input sequence
-    :param seq_lengths: sequence length
-    :param batch_size:
+    :param RNN: RNN class, e.g. LSTMCell
+    :param num_units: int, hidden unit of RNN cell
+    :param num_layers: int, the number of layers
+    :param inputs: Tensor, the input sequence, shape: [batch_size, max_time_step, num_feature]
+    :param seq_lengths: list, sequence length, a list of sequence lengths, the length of the list is batch_size
+    :param batch_size: int 
     :return: the output of last layer bidirectional rnn with concatenating
     这里用到几个tf的特性
     1. tf.variable_scope(None, default_name="bidirectional-rnn")使用default_name
