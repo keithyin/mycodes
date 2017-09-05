@@ -5,12 +5,10 @@ from models import tsganv2
 from config import cnf
 import sys
 import os
-from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
-from tensorflow.python import debug as  tf_debug
 
 current_dir = sys.path[0]
-config_ = cnf.Beef
+config_ = cnf.Elec_0
 
 GLOBAL_STEP = 0
 TRAIN_RECORDS = config_.TRAIN_RECORDS
@@ -34,7 +32,6 @@ def train_num_iteration(sess, d_train_op, g_train_op, num_iteration):
 
 def test_num_iteration(sess, model, num_iteration=1):
     mean_top1 = 0.0
-    threshold = 0.8
     for i in range(num_iteration):
         test_top1, true_label, pred = sess.run(['Accuracy_1/test_top1:0', "test_batch_label:0", "test_pred:0"],
                                                feed_dict={'bn_train:0': False})
@@ -43,22 +40,24 @@ def test_num_iteration(sess, model, num_iteration=1):
         print("ground truth: ", set(true_label))
         print("label preded: ", set(pred))
         print("num test data: ", len(pred))
-        if test_top1 > .93:
+        if test_top1 > .88:
             raise KeyboardInterrupt
-        if test_top1 > threshold:
-            # model.discount_d_loss_factor(discount_rate=0.)
-            print(confusion_matrix(true_label, pred))
-            threshold += .1
-            if threshold > .9:
-                raise KeyboardInterrupt
-                # model.discount_d_loss_factor(discount_rate=0.) to discount d loss factor
-                # model.set_discount_d_loss_factor(value=1.) to set the vale of d loss factor
+        # if test_top1 > threshold:
+        #     # model.discount_d_loss_factor(discount_rate=0.)
+        #     print(confusion_matrix(true_label, pred))
+        #     threshold += .1
+        #     if threshold > .9:
+        #         raise KeyboardInterrupt
+        #         # model.discount_d_loss_factor(discount_rate=0.) to discount d loss factor
+        #         # model.set_discount_d_loss_factor(value=1.) to set the vale of d loss factor
     mean_top1 /= float(num_iteration)
 
     return mean_top1
 
 
 def main():
+
+
     train_batch_sample, train_batch_label = readData.read_data(TRAIN_RECORDS, config=config_)
     # train_batch_sample = tf.add(train_batch_sample,
     #                             tf.random_normal(shape=tf.shape(train_batch_sample), stddev=0.1))
@@ -95,7 +94,7 @@ def main():
     test_top1, test_top5 = model.accuracy(test_logits, test_batch_label_one_hot, phrase='test')
     gpu_conf = tf.GPUOptions(allow_growth=True)
     sess_conf = tf.ConfigProto(gpu_options=gpu_conf)
-    with tf_debug.LocalCLIDebugWrapperSession(tf.Session(config=sess_conf)) as sess:
+    with tf.Session(config=sess_conf) as sess:
         writer = tf.summary.FileWriter(logdir=os.path.join(current_dir, 'ckpt'), graph=sess.graph)
         tf.local_variables_initializer().run()
         tf.global_variables_initializer().run()
@@ -128,14 +127,14 @@ def main():
         except tf.errors.OutOfRangeError:
             print('Done training -- epoch limit reached')
         except KeyboardInterrupt:
-            print('interrupted...')
+            print('Keyboard Interrupt')
+        finally:
             print('saving accu curve.')
             plt.plot(train_loss_track, label='train_accu')
             plt.plot(test_loss_track, label='test_accu')
             plt.legend(loc='lower right')
             plt.savefig('%s_gan_train_test.jpg' % config_.DATASET_NAME)
             print("max accu is ", max(test_loss_track))
-        finally:
             # When done, ask the threads to stop.
             coord.request_stop()
             # Wait for threads to finish.

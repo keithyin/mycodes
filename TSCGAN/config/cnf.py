@@ -9,40 +9,24 @@ class Adia(object):
     DATASET_NAME = 'Adiac'
     TRAIN_RECORDS = os.path.join(proj_dir, "data/%s_train.tfrecords" % DATASET_NAME)
     TEST_RECORDS = os.path.join(data_dir, DATASET_NAME + '/%s_TEST' % DATASET_NAME)
-    num_filt_1 = 16  # Number of filters in first conv layer
+    num_filt_1 = 40  # Number of filters in first conv layer
     num_filt_2 = 14  # Number of filters in second conv layer
-    num_filt_3 = 8  # Number of filters in thirs conv layer
+    num_filt_3 = 12  # Number of filters in thirs conv layer
     num_fc_1 = 40  # Number of neurons in hully connected layer
     max_iterations = 20000
-    BATCH_SIZE = 64
+    BATCH_SIZE = 20
     dropout = 1.0  # Dropout rate in the fully connected layer
     plot_row = 5  # How many rows do you want to plot in the visualization
     LEARNING_RATE = 2e-5
     NUM_CLASSES = 37
     FEATURE_LEN = 176
-
-
-class MedicalImages1(object):
-    DATASET_NAME = 'MedicalImages'
-    TRAIN_RECORDS = os.path.join(proj_dir, "data/%s_train.tfrecords" % DATASET_NAME)
-    TEST_RECORDS = os.path.join(data_dir, DATASET_NAME + '/%s_TEST' % DATASET_NAME)
-    num_filt_1 = 16  # Number of filters in first conv layer
-    num_filt_2 = 14  # Number of filters in second conv layer
-    num_filt_3 = 8  # Number of filters in thirs conv layer
-    num_fc_1 = 40  # Number of neurons in hully connected layer
-    max_iterations = 20000
-    BATCH_SIZE = 64
-    dropout = 1.0  # Dropout rate in the fully connected layer
-    plot_row = 5  # How many rows do you want to plot in the visualization
-    LEARNING_RATE = 2e-5
-    NUM_CLASSES = 10
-    FEATURE_LEN = 99
+    num_train_data = 390
 
 
 class Elec(object):
     DATASET_NAME = 'Elec'
     TRAIN_RECORDS = os.path.join(proj_dir, "data/%s_train.tfrecords" % DATASET_NAME)
-    TEST_RECORDS = os.path.join(data_dir, DATASET_NAME + '/%s_TEST' % DATASET_NAME)
+    TEST_RECORDS = os.path.join(proj_dir, 'Elec/%s_best10-2_TEST' % DATASET_NAME)
     num_filt_1 = 30  # Number of filters in first conv layer 16
     num_filt_2 = 14  # Number of filters in second conv layer 14
     num_filt_3 = 12  # Number of filters in thirs conv layer 8
@@ -56,25 +40,6 @@ class Elec(object):
     FEATURE_LEN = 96
     num_train_data = 2193
     num_test_data = 727
-
-
-class Gun_Point1(object):
-    DATASET_NAME = "Gun_Point"
-    TRAIN_RECORDS = os.path.join(proj_dir, "data/%s_train.tfrecords" % DATASET_NAME)
-    TEST_RECORDS = os.path.join(data_dir, DATASET_NAME + '/%s_TEST' % DATASET_NAME)
-    num_filt_1 = 14
-    num_filt_2 = 10
-    num_filt_3 = 8
-    num_fc_1 = 20
-    max_iterations = 20000
-    BATCH_SIZE = 5
-    dropout = 1.0
-    plot_row = 5
-    LEARNING_RATE = 2e-5
-    NUM_CLASSES = 2
-    FEATURE_LEN = 150
-    num_train_data = 50
-    num_test_data = 150
 
 
 class Coffee(object):
@@ -119,9 +84,9 @@ class Beef(object):
     DATASET_NAME = "Beef"
     TRAIN_RECORDS = os.path.join(proj_dir, "data/%s_train.tfrecords" % DATASET_NAME)
     TEST_RECORDS = os.path.join(data_dir, DATASET_NAME + '/%s_TEST' % DATASET_NAME)
-    num_filt_1 = 30
-    num_filt_2 = 14
-    num_filt_3 = 12
+    num_filt_1 = 4
+    num_filt_2 = 8
+    num_filt_3 = 16
     num_fc_1 = 30
     max_iterations = 20000
     BATCH_SIZE = 3
@@ -366,9 +331,9 @@ class Gun_Point(object):
     DATASET_NAME = "Gun_Point"
     TRAIN_RECORDS = os.path.join(proj_dir, "data/%s_train.tfrecords" % DATASET_NAME)
     TEST_RECORDS = os.path.join(data_dir, DATASET_NAME + '/%s_TEST' % DATASET_NAME)
-    num_filt_1 = 20
-    num_filt_2 = 12
-    num_filt_3 = 10
+    num_filt_1 = 24
+    num_filt_2 = 16
+    num_filt_3 = 12
     num_fc_1 = 20
     max_iterations = 20000
     BATCH_SIZE = 6
@@ -398,7 +363,6 @@ class Haptics(object):
     FEATURE_LEN = 1092
     num_train_data = 155
     num_test_data = 308
-
 
 
 class ItalyPower(object):
@@ -504,15 +468,15 @@ class OliveOil(object):
     DATASET_NAME = "OliveOil"
     TRAIN_RECORDS = os.path.join(proj_dir, "data/%s_train.tfrecords" % DATASET_NAME)
     TEST_RECORDS = os.path.join(data_dir, DATASET_NAME + '/%s_TEST' % DATASET_NAME)
-    num_filt_1 = 40
-    num_filt_2 = 14
-    num_filt_3 = 12
+    num_filt_1 = 16
+    num_filt_2 = 32
+    num_filt_3 = 30
     num_fc_1 = 30
     max_iterations = 20000
     BATCH_SIZE = 4
     dropout = 1.0
     plot_row = 5
-    LEARNING_RATE = 2e-5
+    LEARNING_RATE = 2e-6
     NUM_CLASSES = 4
     FEATURE_LEN = 570
     num_train_data = 30
@@ -555,3 +519,93 @@ class Lighting2(object):
     FEATURE_LEN = 637
     num_train_data = 60
     # 4 8 16 100 batch=32 .63
+
+
+class Trace(object):
+    DATASET_NAME = "Trace"
+    TRAIN_RECORDS = os.path.join(proj_dir, "data/%s_train.tfrecords" % DATASET_NAME)
+    TEST_RECORDS = os.path.join(data_dir, DATASET_NAME + '/%s_TEST' % DATASET_NAME)
+    num_filt_1 = 30
+    num_filt_2 = 16
+    num_filt_3 = 12
+    num_fc_1 = 20
+    max_iterations = 20000
+    BATCH_SIZE = 10
+    dropout = 1.0
+    plot_row = 5
+    LEARNING_RATE = 2e-5
+    NUM_CLASSES = 4
+    FEATURE_LEN = 275
+    num_train_data = 100
+
+
+class TwoLeadECG(object):
+    DATASET_NAME = "TwoLeadECG"
+    TRAIN_RECORDS = os.path.join(proj_dir, "data/%s_train.tfrecords" % DATASET_NAME)
+    TEST_RECORDS = os.path.join(data_dir, DATASET_NAME + '/%s_TEST' % DATASET_NAME)
+    num_filt_1 = 30
+    num_filt_2 = 18
+    num_filt_3 = 12
+    num_fc_1 = 20
+    max_iterations = 20000
+    BATCH_SIZE = 8
+    dropout = 1.0
+    plot_row = 5
+    LEARNING_RATE = 2e-5
+    NUM_CLASSES = 2
+    FEATURE_LEN = 82
+    num_train_data = 23
+
+
+class wafer(object):
+    DATASET_NAME = "wafer"
+    TRAIN_RECORDS = os.path.join(proj_dir, "data/%s_train.tfrecords" % DATASET_NAME)
+    TEST_RECORDS = os.path.join(data_dir, DATASET_NAME + '/%s_TEST' % DATASET_NAME)
+    num_filt_1 = 32
+    num_filt_2 = 16
+    num_filt_3 = 12
+    num_fc_1 = 20
+    max_iterations = 20000
+    BATCH_SIZE = 20
+    dropout = 1.0
+    plot_row = 5
+    LEARNING_RATE = 2e-5
+    NUM_CLASSES = 2
+    FEATURE_LEN = 152
+    num_train_data = 1000
+
+
+class synthetic_control(object):
+    DATASET_NAME = "synthetic_control"
+    TRAIN_RECORDS = os.path.join(proj_dir, "data/%s_train.tfrecords" % DATASET_NAME)
+    TEST_RECORDS = os.path.join(data_dir, DATASET_NAME + '/%s_TEST' % DATASET_NAME)
+    num_filt_1 = 20
+    num_filt_2 = 16
+    num_filt_3 = 12
+    num_fc_1 = 20
+    max_iterations = 20000
+    BATCH_SIZE = 20
+    dropout = 1.0
+    plot_row = 5
+    LEARNING_RATE = 2e-5
+    NUM_CLASSES = 6
+    FEATURE_LEN = 60
+    num_train_data = 300
+
+
+class Elec_0(object):
+    DATASET_NAME = 'Elec-0'
+    TRAIN_RECORDS = os.path.join(proj_dir, "data/%s_train.tfrecords" % DATASET_NAME)
+    TEST_RECORDS = os.path.join(proj_dir, 'Elec/Elec_best10-2_TEST')
+    num_filt_1 = 30  # Number of filters in first conv layer 16
+    num_filt_2 = 14  # Number of filters in second conv layer 14
+    num_filt_3 = 12  # Number of filters in thirs conv layer 8
+    num_fc_1 = 40  # Number of neurons in hully connected layer
+    max_iterations = 20000
+    BATCH_SIZE = 32
+    dropout = 1.0  # Dropout rate in the fully connected layer
+    plot_row = 5  # How many rows do you want to plot in the visualization
+    LEARNING_RATE = 1e-5
+    NUM_CLASSES = 10
+    FEATURE_LEN = 96
+    num_train_data = 520
