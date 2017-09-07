@@ -43,7 +43,7 @@ def read_data(file_names, height=224, width=224, batch_size=64, training=True):
         if training:
             img = img_preprocess(img)
         img = tf.transpose(img, perm=[2, 0, 1])
-        img = 2 * (1 - tf.cast(img, dtype=tf.float32) / 255.0)
+        img = 2 * (tf.cast(img, dtype=tf.float32) / 255.0 - .5)
         min_after_dequeue = 300
         capacity = min_after_dequeue + 3 * batch_size
         batch_img, batch_label = tf.train.shuffle_batch(tensors=[img, label],
