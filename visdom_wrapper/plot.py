@@ -18,7 +18,10 @@ class DrawLine(object):
         self.window = None
         self.legend = legend
         self.num_line = num_line
-        self.x = np.ones([1, self.num_line])
+        if num_line == 1:
+            self.x = np.ones([1]).astype(np.int64)
+        else:
+            self.x = np.ones([1, self.num_line]).astype(np.int64)
         self.title = title
 
     def add_point(self, point):
@@ -29,23 +32,28 @@ class DrawLine(object):
         :return:
         """
 
+        # make sure that point has a valid shape
+
+        # when append, X and Y must have the same shape !!!
+
+        point = self._reshape_point(point)
         if self.window is None:
             # legend setting : once for all
             self.window = self.viz.line(Y=point, X=self.x, opts={'legend': self.legend,
                                                                  'title': self.title})
-        # make sure that point has a valid shape
-        point = self._reshape_point(point)
+        else:
+            self.viz.line(Y=point, X=self.x, win=self.window, update='append')
 
-        # when append, X and Y must have the same shape !!!
-        self.viz.line(Y=point, X=self.x, win=self.window, update='append')
         self.x = self.x + 1
 
     def _reshape_point(self, point):
         assert isinstance(point, (np.ndarray, list))
         self._check_shape(point)
         if isinstance(point, list):
-            point = np.array(list)
+            point = np.array(point)
         point = np.reshape(point, newshape=(1, self.num_line))
+        if np.prod(point.shape) == 1:
+            point = point.squeeze(axis=0)
         return point
 
     def _check_shape(self, point):
@@ -58,10 +66,11 @@ class DrawLine(object):
 
 
 def main():
-    dl = DrawLine(num_line=2, legend=['train', 'test'])
-    for i in range(1000):
-        point = np.array([i, i + 1]).reshape(1, 2)
-        dl.add_point(point=point)
+    line = DrawLine(num_line=2, legend=['test', 'haha'], title='test')
+
+    line.add_point([1., 2.])
+    line.add_point([2., 3.])
+    line.add_point([3., 4.])
 
 
 if __name__ == '__main__':
