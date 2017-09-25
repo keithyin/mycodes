@@ -25,7 +25,7 @@ for i in range(1000):
         loss = criterion(logits, labels)
 
     loss.backward()
-    update.step(batch_size=10)
+    update.step(batch_size=bs)
 
 print("time ", time.time() - begin)
 
