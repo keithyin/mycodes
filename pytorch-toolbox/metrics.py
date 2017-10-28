@@ -40,10 +40,13 @@ def metrics(queries, gallery_features, queries_label, gallery_label, query_test_
         assert isinstance(gallery_label, (torch.LongTensor, cuda.LongTensor))
 
     normalized_queries_features = \
-        queries / torch.unsqueeze(torch.norm(source=queries, dim=1, p=2.), dim=1)
+        queries / torch.unsqueeze(
+            torch.norm(source=queries, dim=1, p=2.) + 1e-8, dim=1)
 
     normalized_gallery_features = \
-        gallery_features / torch.unsqueeze(torch.norm(source=gallery_features, p=2., dim=1), dim=1)
+        gallery_features / torch.unsqueeze(
+            torch.norm(source=gallery_features, p=2., dim=1) + 1e-8, dim=1)
+        
     print('num queries:', len(normalized_queries_features))
     print('num gallery samples:', len(normalized_gallery_features))
 
@@ -65,7 +68,7 @@ def metrics(queries, gallery_features, queries_label, gallery_label, query_test_
     mean_average_precision = cal_mean_average_precision(retrieval=retrieval,
                                                         queries_label=queries_label,
                                                         gallery_label=gallery_label,
-                                                        n=len(gallery_label))
+                                                        query_test_count=query_test_count)
 
     print("precision:{}, recall:{}, map:{}".format(precision, recall, mean_average_precision))
     print('evaluation time:', time.time() - start)
@@ -131,21 +134,22 @@ def cal_recall(retrieval, queries_label, gallery_label, n, query_test_count):
     return mean_recall
 
 
-def cal_mean_average_precision(retrieval, queries_label, gallery_label, n):
+def cal_mean_average_precision(retrieval, queries_label, gallery_label, query_test_count):
+    n = len(gallery_label)
     num_queries = len(retrieval)
     eql = in_first_n_results(retrieval=retrieval, queries_label=queries_label,
                              gallery_label=gallery_label,
                              n=n)
+
     # cumulative_sum [num_queries, n]
 
     cumulative_sum = torch.cumsum(eql, dim=1)
     numerator = eql * cumulative_sum
 
     denominator = torch.unsqueeze(torch.arange(1, end=n + 1), dim=0).expand(num_queries, n).cuda()
-
-    mean_average_precision = torch.mean(numerator / denominator)
+    mean_average_precision = torch.mean(
+        torch.sum(numerator / denominator, dim=1) / query_test_count.type_as(numerator))
     return mean_average_precision
-
 
 def gather_demo():
     id = torch.LongTensor([[1, 2, 3], [0, 1, 2]])
@@ -171,7 +175,33 @@ def accuracy(logits, targets):
 
 
 def main():
-    gather_demo()
+    from torch import nn
+    # queries, gallery_features, queries_label, gallery_label, query_test_count, n
+    datas = []
+    means = torch.FloatTensor([0.] * 10)
+    stds = torch.FloatTensor([.001] * 10)
+    for i in range(10):
+        means[i] = 2.
+        tmps = []
+        for j in range(11):
+            data1_ = torch.normal(means=means, std=stds)
+            tmps.append(data1_)
+        data1 = torch.stack(tmps)
+
+        datas.append(data1)
+    queris = torch.stack([data[0] for data in datas])
+
+    galleries = torch.cat([data[1:] for data in datas])
+    queris_label = torch.arange(start=0, end=10).type(torch.LongTensor)
+    labels = []
+    for i in range(10):
+        labels.extend([i] * 10)
+    gallerie_label = torch.LongTensor(labels)
+    q_t_c = torch.LongTensor([10] * 10)
+    n = 10
+    metrics(queris, galleries, queries_label=queris_label, gallery_label=gallerie_label,
+            query_test_count=q_t_c, n=n)
+
 
 
 if __name__ == '__main__':
