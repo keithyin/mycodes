@@ -38,6 +38,9 @@ def metrics(queries, gallery_features, queries_label, gallery_label, query_test_
     if isinstance(gallery_label, Variable):
         gallery_label = gallery_label.data
         assert isinstance(gallery_label, (torch.LongTensor, cuda.LongTensor))
+    if isinstance(query_test_count, Variable):
+        query_test_count = query_test_count.data
+        assert isinstance(query_test_count, (torch.LongTensor, cuda.LongTensor))
 
     normalized_queries_features = \
         queries / torch.unsqueeze(

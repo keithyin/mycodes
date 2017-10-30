@@ -61,8 +61,19 @@ class CenterLoss(nn.Module):
             masked_feature = torch.masked_select(batch_feature, mask)
             masked_feature = masked_feature.view(-1, self.feature_len)
             mean_masked_feature = torch.mean(masked_feature, dim=0)
-            self.center_feature[label] = self.decay_rate * self.center_feature[label] + \
-                                         (1. - self.decay_rate) * mean_masked_feature
+            if not self.all_feature_is_initialized:
+                if label not in self.initialized_label:
+                    self.initialized_label.append(label)
+                    self.center_feature[label] = mean_masked_feature
+
+                    if len(self.initialized_label) == self.num_classes:
+                        self.all_feature_is_initialized = True
+
+                    continue
+            self.center_feature[label] = \
+                self.decay_rate * self.center_feature[label] + \
+                (1. - self.decay_rate) * \
+                mean_masked_feature
 
 
 def main():
