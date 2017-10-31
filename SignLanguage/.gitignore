@@ -1,6 +1,6 @@
 data/*
 ckpt/*
 .idea/*
-net/__pycache__
+nets/__pycache__
 demmmmmoooossss/
 utils/__pycache__
