@@ -21,8 +21,17 @@ def load_data_tttttttttttttt():
     #     print(i, ":", batch_label.numpy()[0])
 
 
+def ttttttttt_robot():
+    from data.robot_data import load_data_robot
+    train_dataset, dev_dataset = \
+        load_data_robot("/home/fanyang/PycharmProjects/SignLanguage/data/robotfailuer/lp1.data.txt")
+    print(len(train_dataset))
+    print(len(dev_dataset))
+
+
 def main():
-    load_data_tttttttttttttt()
+    # load_data_tttttttttttttt()
+    ttttttttt_robot()
 
 
 if __name__ == '__main__':

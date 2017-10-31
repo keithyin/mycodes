@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
+from tensorboardX import SummaryWriter
 
 
 class SimpleNN1DCNN(nn.Module):
@@ -49,4 +50,55 @@ class SimpleNN1DCNN(nn.Module):
         x = torch.squeeze(x, dim=2)
 
         x = torch.mean(x, dim=-1)
+        return x
+
+
+class SimpleNN1DCNNRobot(nn.Module):
+    def __init__(self, num_classes=4):
+        super(SimpleNN1DCNNRobot, self).__init__()
+        self.num_classes = num_classes
+
+        # [bs, 1, 22, W]
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=(15, 3),
+                               padding=(0, 1))
+
+        # [bs, 64, 1, W]
+        self.conv2 = nn.Conv2d(in_channels=32, out_channels=32, kernel_size=(1, 3),
+                               padding=(0, 1))
+
+        # [bs, 128, 1, W]
+        self.conv3 = nn.Conv2d(in_channels=32, out_channels=num_classes, kernel_size=(1, 3),
+                               padding=(0, 1))
+
+        self.iteration_step = 0
+
+    def forward(self, x, writer=None):
+        """
+        neural network's forward process
+        :param x: [bs, 1, 22, W]
+        :return: [bs, num_classes]
+        """
+        if writer is not None:
+            assert isinstance(writer, SummaryWriter)
+            writer.add_histogram('diagnose/inputs', x.cpu().data,
+                                 global_step=self.iteration_step)
+        x = F.relu(self.conv1(x))
+
+        if writer is not None:
+            writer.add_histogram('diagnose/first-layer', x.cpu().data,
+                                 global_step=self.iteration_step)
+
+        x = F.relu(self.conv2(x))
+
+        if writer is not None:
+            writer.add_histogram('diagnose/first-layer', x.cpu().data,
+                                 global_step=self.iteration_step)
+
+        # x [bs, num_classes, 1, ?]
+        x = self.conv3(x)
+        x = torch.squeeze(x, dim=2)
+        x = torch.mean(x, dim=-1)
+
+        self.iteration_step += 1
+
         return x

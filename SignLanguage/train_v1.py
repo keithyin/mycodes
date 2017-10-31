@@ -2,7 +2,7 @@ from torch import nn
 from data.load_data import load_dataset, SignLangDataset, SignLangDataLoader
 from data.some_script import id_2_sign
 from itertools import count
-from utils import routine
+from utils.routine import Routine
 from utils import tools
 from torch import optim
 from nets.models import SimpleNN1DCNN
@@ -14,12 +14,6 @@ def main():
     id_sign, sign_id = id_2_sign(root)
 
     for i in range(9):
-        glos = globals()
-        # initialize the record step
-
-        glos['_record_step'] = 0
-
-        glos['_record_epoch_step'] = 0
 
         train_samples, dev_samples = load_dataset(root, sign_id, hold_id=i)
 
@@ -34,18 +28,20 @@ def main():
         model.optimizer = optim.Adam(params=model.parameters())
 
         writer = SummaryWriter('ckpt/hold-id-%d' % i)
+        routine = Routine(model=model, saver_dir='ckpt/hold-id-%d' % i, writer=writer)
 
         for i in count():
             train_loader = SignLangDataLoader(dataset=train_dataset,
                                               batch_size=1, shuffle=True)
             dev_loader = SignLangDataLoader(dataset=dev_dateset,
                                             batch_size=1, shuffle=True)
-            routine.train_one_epoch(train_loader, model=model, writer=writer)
+            routine.train_one_epoch(train_loader)
+
             tools.adjust_learning_rate(model.optimizer)
 
-            routine.validation(dev_loader, model=model, writer=writer)
+            routine.validation(dev_loader)
 
-            if i == 80:
+            if i == 100:
                 break
 
 
