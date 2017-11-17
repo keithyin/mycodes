@@ -7,8 +7,6 @@ env = gym.make('flashgames.DuskDrive-v0')
 env.configure(remotes=1)  # automatically creates a local docker container
 observation_n = env.reset()
 
-print(env.action_space)
-exit()
 # there's n environment and [[('KeyEvent', 'ArrowUp', True), ('KeyEvent', 'ArrowUp', False)], [(...),[...]]]
 
 while True:
@@ -19,7 +17,7 @@ while True:
     if observation_n[0] is None:
         continue
     # print('observation_n', observation_n, 'reward', reward_n)
-    print(type(observation_n[0]))
-    print(observation_n[0])
-    plt.imsave('dusk.jpg',observation_n[0]['vision'])
-    exit()
+    # print(type(observation_n[0]))
+    # print(observation_n[0])
+    # plt.imsave('dusk.jpg',observation_n[0]['vision'])
+    # exit()

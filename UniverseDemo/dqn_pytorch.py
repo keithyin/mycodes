@@ -6,7 +6,6 @@ from utils import common_algorithm
 from DqnDushDrive.actions import ACTIONS
 import torch
 from torchvision import transforms
-import matplotlib.pyplot as plt
 from targets.TdTargets import TD
 
 cuda_available = torch.cuda.is_available()
@@ -16,9 +15,9 @@ def learn(env,
           q_func,
           exploration=LinearSchedule(10000000, 0.1),
           replay_buffer_size=50000,
-          batch_size=32,
+          batch_size=128,
           gamma=0.99,
-          learning_starts=100,
+          learning_starts=1000,
           learning_freq=4,
           frame_history_len=4):
     """Run Deep Q-learning algorithm.
@@ -67,8 +66,8 @@ def learn(env,
     target_net = q_func(num_actions=num_actions)
     load_param = True
     if load_param:
-        Q_net.load_state_dict(torch.load("/home/keith/WorkSpace/projects/UniverseDemo/param.pkl"))
-        target_net.load_state_dict(torch.load("/home/keith/WorkSpace/projects/UniverseDemo/param.pkl"))
+        Q_net.load_state_dict(torch.load("/home/fanyang/WorkSpace/mycodes/UniverseDemo/param.pkl"))
+        target_net.load_state_dict(torch.load("/home/fanyang/WorkSpace/mycodes/UniverseDemo/param.pkl"))
 
     if cuda_available:
         Q_net.cuda()
@@ -81,9 +80,9 @@ def learn(env,
     # RUN ENV     #
     ###############
     last_obs = env.reset()
-    action_one_hot = torch.FloatTensor(batch_size, num_actions)
     reward_track = []
     episode_num = 0
+
     for t in itertools.count():
         # ## 1. Check stopping criterion
         # #### behavior policy epsilon-greedy ##############
@@ -114,10 +113,12 @@ def learn(env,
         action = [ACTIONS[action_idx]]
         for i in range(2):
             observations, rewards, dones, infos = env.step(action)
+            reward_track.append(rewards[0] / 1000)
+            env.render()
             if dones[0]:
                 break
         replay_buffer.store_effect(idx=idx, action=action_idx, reward=rewards[0], done=dones[0])
-        reward_track.append(rewards[0] / 1000)
+
         # plt.imsave('img%d.png' % t, observations[0]['vision'][85:595:4, 20:815:4, :])
 
         if dones[0]:
