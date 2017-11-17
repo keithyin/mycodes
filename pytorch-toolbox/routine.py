@@ -8,15 +8,15 @@ class RoutineBase(object):
     def __init__(self, use_gpu=True):
         self.use_gpu = use_gpu
 
-    def cpu_gpu(self, data_tensor):
+    def cpu_gpu(self, data_tensor, volatile=False):
         """
         given tensor on cpu and return the Variable on cpu or gpu according using_gpu
         """
         res = 0
         if self.use_gpu:
-            res = Variable(data_tensor.cuda())
+            res = Variable(data_tensor.cuda(), volatile=volatile)
         else:
-            res = Variable(data_tensor)
+            res = Variable(data_tensor, volatile=volatile)
         return res
 
 
@@ -142,8 +142,8 @@ class Routine(RoutineBase):
             bar.update(i)
             batch_data, batch_label = batch
 
-            batch_data = Variable(batch_data.cuda(), volatile=True)
-            batch_label = Variable(batch_label.cuda(), volatile=True)
+            batch_data = self.cpu_gpu(batch_data, volatile=True)
+            batch_label = self.cpu_gpu(batch_label, volatile=True)
             logits = self.model(batch_data)
 
             loss = self.model.criterion(logits, batch_label)
@@ -236,8 +236,9 @@ class Routine2Criteion(RoutineBase):
             bar.update(i)
             batch_data, batch_label = batch
 
-            batch_data = Variable(batch_data).type(torch.FloatTensor).cuda()
-            batch_label = Variable(batch_label).type(torch.LongTensor).cuda()
+            batch_data =self.cpu_gpu(batch_data)
+            batch_label = self.cpu_gpu(batch_label)
+
             logits = self.model(batch_data)
 
             loss = self.model.criterion(logits, batch_label)
@@ -307,8 +308,8 @@ class Routine2Criteion(RoutineBase):
             bar.update(i)
             batch_data, batch_label = batch
 
-            batch_data = self.cpu_gpu(batch_data)
-            batch_label = self.cpu_gpu(batch_label)
+            batch_data = self.cpu_gpu(batch_data, volatile=True)
+            batch_label = self.cpu_gpu(batch_label, volatile=True)
 
             logits = self.model(batch_data)
 
