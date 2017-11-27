@@ -8,6 +8,7 @@ import time
 import torch
 from torch import cuda
 from torch.autograd import Variable
+from torch.nn import functional as F
 
 
 def metrics(queries, gallery_features, queries_label, gallery_label, query_test_count, n):
@@ -38,24 +39,16 @@ def metrics(queries, gallery_features, queries_label, gallery_label, query_test_
     if isinstance(gallery_label, Variable):
         gallery_label = gallery_label.data
         assert isinstance(gallery_label, (torch.LongTensor, cuda.LongTensor))
-    if isinstance(query_test_count, Variable):
-        query_test_count = query_test_count.data
-        assert isinstance(query_test_count, (torch.LongTensor, cuda.LongTensor))
 
-    normalized_queries_features = \
-        queries / torch.unsqueeze(
-            torch.norm(source=queries, dim=1, p=2.) + 1e-8, dim=1)
+    print('num queries:', len(queries))
+    print('num gallery samples:', len(gallery_features))
+    normalized_queries = F.normalize(queries)
 
-    normalized_gallery_features = \
-        gallery_features / torch.unsqueeze(
-            torch.norm(source=gallery_features, p=2., dim=1) + 1e-8, dim=1)
-        
-    print('num queries:', len(normalized_queries_features))
-    print('num gallery samples:', len(normalized_gallery_features))
+    normalized_gallery = F.normalize(gallery_features)
 
     # [num_queries, num_gallery_sample]
-    cos_simi = torch.matmul(normalized_queries_features, torch.transpose(normalized_gallery_features,
-                                                                         dim0=0, dim1=1))
+    cos_simi = torch.matmul(normalized_queries, torch.transpose(normalized_gallery,
+                                                                dim0=0, dim1=1))
 
     # retrieval [num_queries, num_gallery_samples]
     _, retrieval = torch.sort(cos_simi, dim=1, descending=True)
@@ -75,6 +68,7 @@ def metrics(queries, gallery_features, queries_label, gallery_label, query_test_
 
     print("precision:{}, recall:{}, map:{}".format(precision, recall, mean_average_precision))
     print('evaluation time:', time.time() - start)
+    return precision, recall, mean_average_precision
 
 
 def cal_precision(retrieval, queries_label, gallery_label, n):
@@ -154,27 +148,13 @@ def cal_mean_average_precision(retrieval, queries_label, gallery_label, query_te
         torch.sum(numerator / denominator, dim=1) / query_test_count.type_as(numerator))
     return mean_average_precision
 
+
 def gather_demo():
     id = torch.LongTensor([[1, 2, 3], [0, 1, 2]])
     label = torch.LongTensor([0, 1, 2, 4])
     broadcasted_label = torch.unsqueeze(label, dim=0).expand(2, len(label))
     res = torch.gather(broadcasted_label, dim=1, index=id)
     print(res)
-
-
-def accuracy(logits, targets):
-    """
-    cal the accuracy of the predicted result
-    :param logits: Variable [batch_size, num_classes]
-    :param targets: Variable [batch_size]
-    :return: Variable scalar
-    """
-    assert isinstance(logits, Variable)
-    val, idx = logits.max(dim=1)
-    eql = (idx == targets)
-    eql = eql.type(torch.cuda.FloatTensor)
-    res = torch.mean(eql)
-    return res
 
 
 def main():
@@ -204,7 +184,6 @@ def main():
     n = 10
     metrics(queris, galleries, queries_label=queris_label, gallery_label=gallerie_label,
             query_test_count=q_t_c, n=n)
-
 
 
 if __name__ == '__main__':
