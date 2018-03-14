@@ -1,4 +1,5 @@
 import progressbar
+from tqdm import tqdm
 from torch.autograd import Variable
 import torch
 import os
@@ -63,14 +64,7 @@ class Routine(RoutineBase):
         total_loss = self.cpu_gpu(torch.FloatTensor([0.])).data
         total_accu = self.cpu_gpu(torch.FloatTensor([0.])).data
 
-        widgets = ["processing: ", progressbar.Percentage(),
-                   " ", progressbar.ETA(),
-                   " ", progressbar.FileTransferSpeed(),
-                   ]
-        bar = progressbar.ProgressBar(widgets=widgets, max_value=len(loader)).start()
-
-        for i, batch in enumerate(loader):
-            bar.update(i)
+        for i, batch in enumerate(tqdm(loader)):
             batch_data, batch_label = batch
 
             # batch_data = Variable(batch_data).type(torch.FloatTensor).cuda()
@@ -118,7 +112,6 @@ class Routine(RoutineBase):
         print("training-->epoch:{},mean_loss:{}, mean_accuracy:{}".
               format(self.epoch_step, mean_loss, mean_accu))
 
-        bar.finish()
         self.epoch_step += 1
 
     def validation(self, loader):
@@ -132,14 +125,8 @@ class Routine(RoutineBase):
         total_loss = self.cpu_gpu(torch.FloatTensor([0.])).data
         total_accu = self.cpu_gpu(torch.FloatTensor([0.])).data
 
-        widgets = ["processing: ", progressbar.Percentage(),
-                   " ", progressbar.ETA(),
-                   " ", progressbar.FileTransferSpeed(),
-                   ]
-        bar = progressbar.ProgressBar(widgets=widgets, max_value=len(loader)).start()
 
-        for i, batch in enumerate(loader):
-            bar.update(i)
+        for i, batch in enumerate(tqdm(loader)):
             batch_data, batch_label = batch
 
             batch_data = self.cpu_gpu(batch_data, volatile=True)
@@ -165,7 +152,6 @@ class Routine(RoutineBase):
         print("validation-->epoch:{},mean_loss:{}, mean_accuracy:{}".
               format(record_epoch_step, mean_loss, mean_accu))
 
-        bar.finish()
 
     def accuracy(self, logits, targets):
         """
@@ -226,14 +212,7 @@ class Routine2Criteion(RoutineBase):
         total_loss = self.cpu_gpu(torch.FloatTensor([0.])).data
         total_accu = self.cpu_gpu(torch.FloatTensor([0.])).data
 
-        widgets = ["processing: ", progressbar.Percentage(),
-                   " ", progressbar.ETA(),
-                   " ", progressbar.FileTransferSpeed(),
-                   ]
-        bar = progressbar.ProgressBar(widgets=widgets, max_value=len(loader)).start()
-
-        for i, batch in enumerate(loader):
-            bar.update(i)
+        for i, batch in enumerate(tqdm(loader)):
             batch_data, batch_label = batch
 
             batch_data =self.cpu_gpu(batch_data)
@@ -284,7 +263,6 @@ class Routine2Criteion(RoutineBase):
         print("training-->epoch:{},mean_loss:{}, mean_accuracy:{}".
               format(self.epoch_step, mean_loss, mean_accu))
 
-        bar.finish()
         self.epoch_step += 1
 
     def validation(self, loader):
@@ -298,14 +276,8 @@ class Routine2Criteion(RoutineBase):
         total_loss = self.cpu_gpu(torch.FloatTensor([0.])).data
         total_accu = self.cpu_gpu(torch.FloatTensor([0.])).data
 
-        widgets = ["processing: ", progressbar.Percentage(),
-                   " ", progressbar.ETA(),
-                   " ", progressbar.FileTransferSpeed(),
-                   ]
-        bar = progressbar.ProgressBar(widgets=widgets, max_value=len(loader)).start()
 
-        for i, batch in enumerate(loader):
-            bar.update(i)
+        for i, batch in enumerate(tqdm(loader)):
             batch_data, batch_label = batch
 
             batch_data = self.cpu_gpu(batch_data, volatile=True)
@@ -335,7 +307,6 @@ class Routine2Criteion(RoutineBase):
         print("validation-->epoch:{},mean_loss:{}, mean_accuracy:{}".
               format(record_epoch_step, mean_loss, mean_accu))
 
-        bar.finish()
 
     def accuracy(self, logits, targets):
         """
