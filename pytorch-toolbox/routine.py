@@ -1,4 +1,3 @@
-import progressbar
 from tqdm import tqdm
 from torch.autograd import Variable
 import torch
